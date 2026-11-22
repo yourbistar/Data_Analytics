@@ -1,0 +1,178 @@
+table fact_sales
+	lineageTag: d05a750a-215a-4e34-ab6d-a297e0c356e0
+
+	measure 'Total Orders' = DISTINCTCOUNT(fact_sales[OrderID])
+		formatString: 0
+		displayFolder: Sales
+		lineageTag: 2a5c5a2d-d9d2-4c6b-93e8-44810d7dd46f
+
+	measure 'Total Revenue' = SUMX(fact_sales, fact_sales[Units] * fact_sales[UnitPrice])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Sales
+		lineageTag: 78fff542-c49f-4ba8-814d-da5ba985b9ef
+
+	measure 'Units Sold' = SUM(fact_sales[Units])
+		formatString: #,0
+		displayFolder: Sales
+		lineageTag: 67692349-f313-4501-9c04-40fcb0865c1e
+
+	measure 'Average Order Value' = DIVIDE([Total Revenue], [Total Orders])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Sales
+		lineageTag: 4467b1f1-2713-48d8-9ff9-a39bdc0fc490
+
+	measure 'Revenue per Unit' = DIVIDE([Total Revenue], [Units Sold])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Sales
+		lineageTag: 7c9da9b4-b1e4-44ee-873d-e82038db0d18
+
+	measure 'Revenue Rank by Product' = RANKX(ALL(dim_product[ProductName]), [Total Revenue], , DESC, DENSE)
+		formatString: 0
+		displayFolder: Analysis
+		lineageTag: 2e5617a5-74d9-4ac5-804a-b5e7eed3415e
+
+	measure 'Revenue % of Total' =
+			DIVIDE(
+				[Total Revenue],
+				CALCULATE(
+					[Total Revenue],
+					REMOVEFILTERS(dim_product),
+					REMOVEFILTERS(dim_region),
+					REMOVEFILTERS(dim_channel)
+				)
+			)
+		formatString: 0.0%;(0.0%);0.0%
+		displayFolder: Analysis
+		lineageTag: 8b3c834c-0be1-49ed-b7c0-1d6149cf6130
+
+	measure 'Current Month Revenue' = CALCULATE([Total Revenue], DATESMTD(dim_date[Date]))
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Time Intelligence
+		lineageTag: 67b9ab89-8329-4481-8e9e-4f7b9b9ed875
+
+	measure 'Previous Month Revenue' = CALCULATE([Total Revenue], PREVIOUSMONTH(dim_date[Date]))
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Time Intelligence
+		lineageTag: d88f7178-e34c-43fc-95e3-f9174def3e48
+
+	measure 'Month-over-Month Growth %' =
+			DIVIDE(
+				[Current Month Revenue] - [Previous Month Revenue],
+				[Previous Month Revenue]
+			)
+		formatString: 0.0%;(0.0%);0.0%
+		displayFolder: Time Intelligence
+		lineageTag: 8e925796-dd80-4d64-9222-f2cf86511ff2
+
+	measure 'Year-to-Date Revenue' = TOTALYTD([Total Revenue], dim_date[Date])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Time Intelligence
+		lineageTag: 5d058c2f-1f75-4b1f-96d6-951a41e54714
+
+	measure 'Previous Year Revenue' = CALCULATE([Total Revenue], SAMEPERIODLASTYEAR(dim_date[Date]))
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Time Intelligence
+		lineageTag: 7fd5a079-4ef7-4bd2-ad0d-6c606cc8ec5a
+
+	measure 'Year-over-Year Growth %' =
+			DIVIDE(
+				[Total Revenue] - [Previous Year Revenue],
+				[Previous Year Revenue]
+			)
+		formatString: 0.0%;(0.0%);0.0%
+		displayFolder: Time Intelligence
+		lineageTag: 27592c96-9f83-4e89-a728-a8f5058a71ba
+
+	column OrderID
+		dataType: int64
+		formatString: 0
+		lineageTag: 9296389f-bace-467c-a2c3-106928e0ec7a
+		summarizeBy: none
+		sourceColumn: OrderID
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 79e0ba88-4399-4b08-a6bd-ed21ade2061e
+		summarizeBy: none
+		sourceColumn: OrderDate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column MonthStart
+		dataType: dateTime
+		formatString: MMM yyyy
+		lineageTag: 2c304c13-79e7-4e70-b5b4-8b5317c09d5a
+		summarizeBy: none
+		sourceColumn: MonthStart
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column ProductID
+		dataType: int64
+		formatString: 0
+		lineageTag: ca4295af-6e79-4bae-8893-77e532e2882f
+		summarizeBy: none
+		sourceColumn: ProductID
+
+		annotation SummarizationSetBy = Automatic
+
+	column RegionID
+		dataType: int64
+		formatString: 0
+		lineageTag: 45728b56-e4ed-471b-939b-39a93e431542
+		summarizeBy: none
+		sourceColumn: RegionID
+
+		annotation SummarizationSetBy = Automatic
+
+	column ChannelID
+		dataType: int64
+		formatString: 0
+		lineageTag: 8deb84da-91c6-41ff-abb1-61970ac2014a
+		summarizeBy: none
+		sourceColumn: ChannelID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Units
+		dataType: int64
+		formatString: 0
+		lineageTag: c3bcb3c6-d8f0-4106-bb39-9485f340f755
+		summarizeBy: none
+		sourceColumn: Units
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitPrice
+		dataType: double
+		lineageTag: 71d08be2-56eb-4771-aee3-c6ac3eab201b
+		summarizeBy: none
+		sourceColumn: UnitPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition fact_sales = m
+		mode: import
+		source =
+				let
+				    DataFolder = if Text.EndsWith(pDataFolder, "\") then pDataFolder else pDataFolder & "\",
+				    Source = Csv.Document(File.Contents(DataFolder & "fact_sales.csv"),[Delimiter=",", Columns=7, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"OrderID", Int64.Type}, {"OrderDate", type date}, {"ProductID", Int64.Type}, {"RegionID", Int64.Type}, {"ChannelID", Int64.Type}, {"Units", Int64.Type}, {"UnitPrice", type number}}),
+				    #"Added MonthStart" = Table.AddColumn(#"Changed Type", "MonthStart", each Date.StartOfMonth([OrderDate]), type date)
+				in
+				    #"Added MonthStart"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

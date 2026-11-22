@@ -1,0 +1,35 @@
+table dim_channel
+	lineageTag: 9b17b4c6-e81e-43d0-ad6a-ec3a6a0e9d37
+
+	column ChannelID
+		dataType: int64
+		formatString: 0
+		lineageTag: 665769b9-caf5-4eab-9683-37a7b9e5b29c
+		summarizeBy: none
+		sourceColumn: ChannelID
+
+		annotation SummarizationSetBy = Automatic
+
+	column ChannelName
+		dataType: string
+		lineageTag: d0443fd9-4c53-412c-891a-6d21d3c2390e
+		summarizeBy: none
+		sourceColumn: ChannelName
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_channel = m
+		mode: import
+		source =
+				let
+				    DataFolder = if Text.EndsWith(pDataFolder, "\") then pDataFolder else pDataFolder & "\",
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_channel.csv"),[Delimiter=",", Columns=2, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"ChannelID", Int64.Type}, {"ChannelName", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,71 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "863e49ecb8554625b7c3",
+  "position": {
+    "z": 0,
+    "x": 32,
+    "tabOrder": 0,
+    "height": 92,
+    "y": 76,
+    "width": 394
+  },
+  "visual": {
+    "query": {
+      "sortDefinition": {
+        "isDefaultSort": true
+      },
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_sales"
+                    }
+                  },
+                  "Property": "Month-over-Month Growth %"
+                }
+              },
+              "nativeQueryRef": "Month-over-Month Growth %",
+              "active": true,
+              "queryRef": "fact_sales.Month-over-Month Growth %"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Month-over-Month Growth %'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualType": "card"
+  }
+}

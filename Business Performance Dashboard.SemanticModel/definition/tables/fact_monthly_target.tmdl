@@ -1,0 +1,77 @@
+table fact_monthly_target
+	lineageTag: 5141a411-b61f-4bd7-ae33-4a46929ae3e5
+
+	measure 'Revenue Target' = SUM(fact_monthly_target[RevenueTarget])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Targets
+		lineageTag: 7f3d6a91-337e-4f93-b334-b2ec2aabb80a
+
+	measure 'Revenue Variance' = [Total Revenue] - [Revenue Target]
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Targets
+		lineageTag: a1697353-6b28-42f5-9fa5-6efffc8a49d8
+
+	measure 'Target Attainment %' = DIVIDE([Total Revenue], [Revenue Target])
+		formatString: 0.0%;(0.0%);0.0%
+		displayFolder: Targets
+		lineageTag: 680edac8-dca1-4e1a-93f0-78be8d913af2
+
+	measure 'Current Month Target' = CALCULATE([Revenue Target], DATESMTD(dim_date[Date]))
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Targets
+		lineageTag: 3fd3c875-b710-4925-8493-d203fca8000b
+
+	measure 'YTD Target' = TOTALYTD([Revenue Target], dim_date[Date])
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		displayFolder: Targets
+		lineageTag: 968fe515-5628-4116-b4f3-8e73fc72f5e2
+
+	measure 'Revenue Variance %' = DIVIDE([Revenue Variance], [Revenue Target])
+		formatString: 0.0%;(0.0%);0.0%
+		displayFolder: Targets
+		lineageTag: 186fb808-3ebc-405f-aa9d-d9337fb9ae95
+
+	column TargetMonth
+		dataType: dateTime
+		formatString: MMM yyyy
+		lineageTag: dee6d4b8-1a87-45ce-82e9-3cbbb498739d
+		summarizeBy: none
+		sourceColumn: TargetMonth
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column RegionID
+		dataType: int64
+		formatString: 0
+		lineageTag: 9259dcfd-b5b6-4c83-9289-434d79821a6e
+		summarizeBy: none
+		sourceColumn: RegionID
+
+		annotation SummarizationSetBy = Automatic
+
+	column RevenueTarget
+		dataType: int64
+		formatString: 0
+		lineageTag: 2f064f65-195d-4340-9872-ba076a55ad7e
+		summarizeBy: none
+		sourceColumn: RevenueTarget
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_monthly_target = m
+		mode: import
+		source =
+				let
+				    DataFolder = if Text.EndsWith(pDataFolder, "\") then pDataFolder else pDataFolder & "\",
+				    Source = Csv.Document(File.Contents(DataFolder & "fact_monthly_target.csv"),[Delimiter=",", Columns=3, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"TargetMonth", type date}, {"RegionID", Int64.Type}, {"RevenueTarget", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

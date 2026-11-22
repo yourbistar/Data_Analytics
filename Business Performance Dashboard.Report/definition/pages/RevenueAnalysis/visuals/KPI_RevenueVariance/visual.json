@@ -1,0 +1,71 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "851f41ed71d34240b31b",
+  "position": {
+    "z": 0,
+    "x": 854,
+    "tabOrder": 0,
+    "height": 92,
+    "y": 76,
+    "width": 394
+  },
+  "visual": {
+    "query": {
+      "sortDefinition": {
+        "isDefaultSort": true
+      },
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_monthly_target"
+                    }
+                  },
+                  "Property": "Revenue Variance"
+                }
+              },
+              "nativeQueryRef": "Revenue Variance",
+              "active": true,
+              "queryRef": "fact_monthly_target.Revenue Variance"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Revenue Variance'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualType": "card"
+  }
+}

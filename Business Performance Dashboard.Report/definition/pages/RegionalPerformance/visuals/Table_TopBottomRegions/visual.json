@@ -1,0 +1,131 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "f97bc4ec2b9c49b2aee2",
+  "position": {
+    "z": 0,
+    "x": 640,
+    "tabOrder": 0,
+    "height": 204,
+    "y": 484,
+    "width": 608
+  },
+  "visual": {
+    "query": {
+      "sortDefinition": {
+        "isDefaultSort": true,
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_monthly_target"
+                  }
+                },
+                "Property": "Target Attainment %"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      },
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_region"
+                    }
+                  },
+                  "Property": "RegionName"
+                }
+              },
+              "nativeQueryRef": "RegionName",
+              "active": true,
+              "queryRef": "dim_region.RegionName"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_sales"
+                    }
+                  },
+                  "Property": "Total Revenue"
+                }
+              },
+              "nativeQueryRef": "Total Revenue",
+              "active": true,
+              "queryRef": "fact_sales.Total Revenue"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_monthly_target"
+                    }
+                  },
+                  "Property": "Revenue Target"
+                }
+              },
+              "nativeQueryRef": "Revenue Target",
+              "active": true,
+              "queryRef": "fact_monthly_target.Revenue Target"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_monthly_target"
+                    }
+                  },
+                  "Property": "Target Attainment %"
+                }
+              },
+              "nativeQueryRef": "Target Attainment %",
+              "active": true,
+              "queryRef": "fact_monthly_target.Target Attainment %"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Top and Bottom Regions by Target Attainment'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualType": "tableEx"
+  }
+}

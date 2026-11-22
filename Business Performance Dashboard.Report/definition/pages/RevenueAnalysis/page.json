@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.0.0/schema.json",
+  "name": "c8cc389417054eed8424",
+  "displayName": "Revenue Analysis",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "visualInteractions": [
+    {
+      "source": "1674303aee38433992a7",
+      "target": "dc99e1132bf348f4b474",
+      "type": "NoFilter"
+    },
+    {
+      "source": "09d98d6dd3ea4e88b5a4",
+      "target": "dc99e1132bf348f4b474",
+      "type": "NoFilter"
+    },
+    {
+      "source": "1674303aee38433992a7",
+      "target": "6f99efc2a4b342d19abb",
+      "type": "NoFilter"
+    },
+    {
+      "source": "09d98d6dd3ea4e88b5a4",
+      "target": "6f99efc2a4b342d19abb",
+      "type": "NoFilter"
+    },
+    {
+      "source": "1674303aee38433992a7",
+      "target": "851f41ed71d34240b31b",
+      "type": "NoFilter"
+    },
+    {
+      "source": "09d98d6dd3ea4e88b5a4",
+      "target": "851f41ed71d34240b31b",
+      "type": "NoFilter"
+    }
+  ]
+}

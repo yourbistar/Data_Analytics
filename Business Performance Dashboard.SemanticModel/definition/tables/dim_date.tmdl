@@ -1,0 +1,168 @@
+table dim_date
+	lineageTag: 0781d955-ad15-4bf6-93e6-3ed6b958d477
+	dataCategory: Time
+
+	column MonthStart
+		dataType: dateTime
+		formatString: MMM yyyy
+		lineageTag: a7170b42-6586-41f4-8b64-ae2b25831842
+		summarizeBy: none
+		sourceColumn: MonthStart
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 6721e13a-1ec8-4fce-9a33-2d617301789a
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthNumber
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: fc4773ab-2894-454b-ae96-1205c3013e8f
+		summarizeBy: none
+		sourceColumn: MonthNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthName
+		dataType: string
+		lineageTag: 5c1fc7da-7966-45e0-b003-70915991f585
+		summarizeBy: none
+		sourceColumn: MonthName
+		sortByColumn: MonthNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearMonth
+		dataType: string
+		lineageTag: 8f466d58-d45b-4cc2-8fca-fda184c6cd02
+		summarizeBy: none
+		sourceColumn: YearMonth
+		sortByColumn: YearMonthSort
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: dateTime
+		formatString: dd MMM yyyy
+		lineageTag: 6e75e2d1-82d7-49bf-99da-f098e7a8b675
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Quarter
+		dataType: string
+		lineageTag: e2d17de7-4d16-4e32-9a08-5268e901ed29
+		summarizeBy: none
+		sourceColumn: Quarter
+		sortByColumn: QuarterNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column QuarterNumber
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 9a83ccb7-2d31-42cf-a47c-68c19942bcf4
+		summarizeBy: none
+		sourceColumn: QuarterNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearQuarter
+		dataType: string
+		lineageTag: 58652c12-1519-4193-aea4-a28b8c3344a4
+		summarizeBy: none
+		sourceColumn: YearQuarter
+		sortByColumn: YearQuarterSort
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearQuarterSort
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 1c590151-3fda-471e-bc68-5a1393e7d1f2
+		summarizeBy: none
+		sourceColumn: YearQuarterSort
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearMonthSort
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a94b6ea6-1413-47e9-b607-2ad6f0fb047e
+		summarizeBy: none
+		sourceColumn: YearMonthSort
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayOfMonth
+		dataType: int64
+		formatString: 0
+		lineageTag: b3375673-772e-4aa8-85a7-a9baf58cefeb
+		summarizeBy: none
+		sourceColumn: DayOfMonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayOfWeekNumber
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c404182a-a590-4483-bbe1-a0601671bb1c
+		summarizeBy: none
+		sourceColumn: DayOfWeekNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayOfWeek
+		dataType: string
+		lineageTag: 842e176a-ef58-4102-a85e-2745ff9c858d
+		summarizeBy: none
+		sourceColumn: DayOfWeek
+		sortByColumn: DayOfWeekNumber
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_date = m
+		mode: import
+		source =
+				let
+					CalendarStart = #date(2023, 1, 1),
+					CalendarEnd = #date(2025, 12, 31),
+					DateList = List.Dates(CalendarStart, Duration.Days(CalendarEnd - CalendarStart) + 1, #duration(1, 0, 0, 0)),
+					DateTable = Table.FromList(DateList, Splitter.SplitByNothing(), {"Date"}),
+					TypedDate = Table.TransformColumnTypes(DateTable, {{"Date", type date}}),
+					AddYear = Table.AddColumn(TypedDate, "Year", each Date.Year([Date]), Int64.Type),
+					AddQuarterNumber = Table.AddColumn(AddYear, "QuarterNumber", each Date.QuarterOfYear([Date]), Int64.Type),
+					AddQuarter = Table.AddColumn(AddQuarterNumber, "Quarter", each "Q" & Text.From([QuarterNumber]), type text),
+					AddYearQuarter = Table.AddColumn(AddQuarter, "YearQuarter", each Text.From([Year]) & "-Q" & Text.From([QuarterNumber]), type text),
+					AddYearQuarterSort = Table.AddColumn(AddYearQuarter, "YearQuarterSort", each [Year] * 10 + [QuarterNumber], Int64.Type),
+					AddMonthNumber = Table.AddColumn(AddYearQuarterSort, "MonthNumber", each Date.Month([Date]), Int64.Type),
+					AddMonthName = Table.AddColumn(AddMonthNumber, "MonthName", each Date.ToText([Date], "MMMM", "en-US"), type text),
+					AddYearMonth = Table.AddColumn(AddMonthName, "YearMonth", each Date.ToText([Date], "yyyy-MM", "en-US"), type text),
+					AddYearMonthSort = Table.AddColumn(AddYearMonth, "YearMonthSort", each [Year] * 100 + [MonthNumber], Int64.Type),
+					AddMonthStart = Table.AddColumn(AddYearMonthSort, "MonthStart", each Date.StartOfMonth([Date]), type date),
+					AddDayOfMonth = Table.AddColumn(AddMonthStart, "DayOfMonth", each Date.Day([Date]), Int64.Type),
+					AddDayOfWeekNumber = Table.AddColumn(AddDayOfMonth, "DayOfWeekNumber", each Date.DayOfWeek([Date], Day.Monday) + 1, Int64.Type),
+					AddDayOfWeek = Table.AddColumn(AddDayOfWeekNumber, "DayOfWeek", each Date.ToText([Date], "dddd", "en-US"), type text)
+				in
+					AddDayOfWeek
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

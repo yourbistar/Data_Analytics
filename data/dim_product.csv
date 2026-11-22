@@ -1,0 +1,9 @@
+ProductID,ProductName,Category,BasePrice
+1,Analytics Starter,Software,199.0
+2,Analytics Pro,Software,499.0
+3,Implementation,Services,1200.0
+4,Training Package,Services,650.0
+5,Support Plan,Subscription,299.0
+6,Enterprise License,Software,2400.0
+7,Data Quality Review,Services,900.0
+8,Premium Support,Subscription,599.0

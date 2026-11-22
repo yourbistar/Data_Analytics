@@ -1,0 +1,124 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "9a78fcca38524c43b163",
+  "position": {
+    "z": 0,
+    "x": 640,
+    "tabOrder": 0,
+    "height": 192,
+    "y": 280,
+    "width": 608
+  },
+  "visual": {
+    "query": {
+      "sortDefinition": {
+        "isDefaultSort": true,
+        "sort": [
+          {
+            "direction": "Ascending",
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "dim_date"
+                  }
+                },
+                "Property": "MonthStart"
+              }
+            }
+          }
+        ]
+      },
+      "queryState": {
+        "Y": {
+          "projections": [
+            {
+              "queryRef": "fact_sales.Month-over-Month Growth %",
+              "nativeQueryRef": "Month-over-Month Growth %",
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_sales"
+                    }
+                  },
+                  "Property": "Month-over-Month Growth %"
+                }
+              },
+              "active": true
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "queryRef": "dim_region.RegionName",
+              "nativeQueryRef": "RegionName",
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_region"
+                    }
+                  },
+                  "Property": "RegionName"
+                }
+              },
+              "active": true
+            }
+          ]
+        },
+        "Category": {
+          "projections": [
+            {
+              "queryRef": "dim_date.MonthStart",
+              "nativeQueryRef": "MonthStart",
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_date"
+                    }
+                  },
+                  "Property": "MonthStart"
+                }
+              },
+              "active": true
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Regional Month-over-Month Growth %'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualType": "lineChart"
+  }
+}

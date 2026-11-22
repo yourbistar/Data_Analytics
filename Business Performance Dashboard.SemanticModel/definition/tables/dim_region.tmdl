@@ -1,0 +1,35 @@
+table dim_region
+	lineageTag: f9ece6ce-1e68-4990-acc7-e2c5d8342322
+
+	column RegionID
+		dataType: int64
+		formatString: 0
+		lineageTag: 2653aedf-801a-4f5a-a4ac-2138b6686fd8
+		summarizeBy: none
+		sourceColumn: RegionID
+
+		annotation SummarizationSetBy = Automatic
+
+	column RegionName
+		dataType: string
+		lineageTag: f0feaaa4-0376-4d68-a42a-92be310f9d24
+		summarizeBy: none
+		sourceColumn: RegionName
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_region = m
+		mode: import
+		source =
+				let
+				    DataFolder = if Text.EndsWith(pDataFolder, "\") then pDataFolder else pDataFolder & "\",
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_region.csv"),[Delimiter=",", Columns=2, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"RegionID", Int64.Type}, {"RegionName", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

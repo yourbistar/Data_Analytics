@@ -1,0 +1,52 @@
+table dim_product
+	lineageTag: 1dd74866-4c66-462e-89ae-62208832e358
+
+	column ProductID
+		dataType: int64
+		formatString: 0
+		lineageTag: 6b4a3a69-1412-4046-8354-f892af164dec
+		summarizeBy: none
+		sourceColumn: ProductID
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductName
+		dataType: string
+		lineageTag: 6ab57474-846d-4bea-af99-96aca9d787e9
+		summarizeBy: none
+		sourceColumn: ProductName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Category
+		dataType: string
+		lineageTag: 843bd614-deab-4c6a-b571-af401eb854f0
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column BasePrice
+		dataType: int64
+		formatString: 0
+		lineageTag: 36df659d-e4ec-460c-97e6-2d41c8aed0c2
+		summarizeBy: none
+		sourceColumn: BasePrice
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_product = m
+		mode: import
+		source =
+				let
+				    DataFolder = if Text.EndsWith(pDataFolder, "\") then pDataFolder else pDataFolder & "\",
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_product.csv"),[Delimiter=",", Columns=4, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"ProductID", Int64.Type}, {"ProductName", type text}, {"Category", type text}, {"BasePrice", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

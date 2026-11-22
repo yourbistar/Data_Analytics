@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Business Performance Dashboard"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "95e1d62f-bd4a-440a-8c6f-64e79b0863db"
+  }
+}
